@@ -13,6 +13,7 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
 
     private var signedInUser : Option[User] = None
 
+
     def handleMessage(evt: ClientMessages): Unit = {
 //        lazy val responseTimestamp = currentTime
         evt match {
