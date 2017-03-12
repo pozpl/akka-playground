@@ -1,7 +1,7 @@
 package actors
 
 import akka.actor.ActorRef
-import service.ChatEventBus
+import service.routing.ChatEventBus
 
 /**
   * Created by pozpl on 02.03.17.

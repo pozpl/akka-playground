@@ -1,9 +1,11 @@
-package service
+package service.session
 
-import actors.{ActorWithLogging, ChatServer}
+import actors.ChatServer
 import akka.actor.Terminated
 import models.User
 import service.protocol.{Login, UserActivated}
+import service.ChatCoordinate
+import service.routing.{ChatCoordinate, ChatSegments}
 
 /**
   * Created by pozpl on 02.03.17.

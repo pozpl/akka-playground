@@ -1,4 +1,4 @@
-package service
+package service.routing
 
 import akka.event.{ActorEventBus, SubchannelClassification}
 import akka.util.Subclassification

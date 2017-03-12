@@ -2,7 +2,7 @@ package service.protocol
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import service.ChatCoordinate
+import service.routing.ChatCoordinate
 
 /**
   * Created by pozpl on 02.03.17.

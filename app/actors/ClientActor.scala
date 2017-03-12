@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef}
 import models.User
 import play.api.libs.json.JsValue
 import service.protocol._
-import service.ChatEventBus
+import service.routing.ChatEventBus
 
 /**
   * Created by pozpl on 25.02.17.

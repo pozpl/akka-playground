@@ -1,4 +1,4 @@
-package service
+package service.routing
 
 import actors.ChatServer
 import service.protocol.ReceivedTextMessage

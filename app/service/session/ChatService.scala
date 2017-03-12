@@ -1,6 +1,7 @@
-package service
+package service.session
 
 import actors.ChatServer
+import service.routing.{ChatEventBus, ChatRoutingService}
 
 /**
   * Created by pozpl on 07.03.17.
