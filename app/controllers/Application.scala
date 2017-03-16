@@ -7,6 +7,7 @@ import akka.actor._
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.mvc._
+import service.autorisation.AuthorizationServiceMemory
 import service.routing.ChatEventBus
 import service.session.ChatService
 
@@ -20,7 +21,8 @@ class Application @Inject()(actorSystem: ActorSystem)  extends Controller {
   // creates actor of type chat described above
 //  val chat = actorSystem.actorOf(Props[Chat], "chat")
   val eventBus = new ChatEventBus
-  val chatService = actorSystem.actorOf(Props(new ChatService(eventBus)))
+  var authService = new AuthorizationServiceMemory();
+  val chatService = actorSystem.actorOf(Props(new ChatService(eventBus, authService)))
   /*
    Specifies how to wrap an out-actor that will represent
    WebSocket connection for a given request.

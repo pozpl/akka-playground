@@ -35,7 +35,10 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
             val response = handleMessage(request)
 //            out ! response
         }
-        case UserActivated(user) => signedInUser = Some(user)
+        case UserActivated(user) => {
+            log.info("Authorised user")
+            signedInUser = Some(user)
+        }
         case receivedMessage:ReceivedTextMessage => {
             log.info("Trying to send outbound message " + receivedMessage.textMessage.message)
             signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue( OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)))
