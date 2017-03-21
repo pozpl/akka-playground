@@ -10,6 +10,9 @@ trait ChatRoutingService {
     this: ChatServer =>
 
     protected def chatManagement: Receive = {
-        case msg:ReceivedTextMessage => chatEventBus.publish(msg)
+        case msg:ReceivedTextMessage => {
+            conversationsService.registerTextMessage(msg)
+            chatEventBus.publish(msg)
+        }
     }
 }

@@ -9,4 +9,4 @@ abstract class InternalMessages
 
 case class UserActivated(user: User) extends InternalMessages
 
-case class ReceivedTextMessage(textMessage: TextMessage, userUid: String) extends InternalMessages
+case class ReceivedTextMessage(textMessage: TextMessage, userUid: String, timeStump: Long) extends InternalMessages

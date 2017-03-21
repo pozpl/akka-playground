@@ -5,6 +5,8 @@ import models.User
 import play.api.libs.json.JsValue
 import service.protocol._
 import service.routing.ChatEventBus
+import java.time.Instant;
+import java.time.ZoneOffset;
 
 /**
   * Created by pozpl on 25.02.17.
@@ -18,7 +20,10 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
 //        lazy val responseTimestamp = currentTime
         evt match {
             case login: Login => chatService ! login
-            case textMessage: TextMessage => signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.uid))
+            case textMessage: TextMessage => {
+                val timeStump:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
+                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.uid, timeStump))
+            }
         }
     }
 
