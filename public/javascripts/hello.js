@@ -11,7 +11,10 @@ angular.module("ChatApp").controller("ChatController",
 		chat.username = "";
 		chat.receiver = "";
 
+		chat.getHistoryUserUid = null;
+
 		chat.register = register;
+		chat.getHistory = getHistory;
 
 		init();
 
@@ -61,10 +64,26 @@ angular.module("ChatApp").controller("ChatController",
 			$timeout(function () {
 				if(msg && msg.data){
 					var parsedData = JSON.parse(msg.data);
-					chat.messages.push(parsedData.from + ":" + parsedData.message);
+					if(parsedData.messageType == "outbound_text_message"){
+						chat.messages.push(parsedData.from + ":" + parsedData.message);
+					}else if(parsedData.messageType == "get_chat_history_response"){
+						angular.forEach(parsedData.messagesList, function(message){
+							chat.messages.push(message.from + ":" + message.message);
+						})
+					}
 				}
 
 			});
+		}
+
+		function getHistory() {
+			sendViaWs(JSON.stringify({
+				chatCoordinate: {
+					segment: "individual",
+					target: chat.getHistoryUserUid
+				},
+				messageType: "get_chat_history_request"
+			}));
 		}
 
 		function sendViaWs(message, callback) {

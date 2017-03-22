@@ -24,6 +24,10 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
                 val timeStump:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
                 signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.uid, timeStump))
             }
+            case getChatHistory: GetChatHistoryRequest => {
+                log.info("Get chat history request " + getChatHistory.toString)
+                signedInUser.map((user:User) => chatService ! ChatHistoryRequest(user.uid, getChatHistory.chatCoordinate))
+            }
         }
     }
 
@@ -46,7 +50,15 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
         }
         case receivedMessage:ReceivedTextMessage => {
             log.info("Trying to send outbound message " + receivedMessage.textMessage.message)
-            signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue( OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)))
+            signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue(
+                OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
+            ))
+        }
+        case chatHistoryResponse: ChatHistoryResponse => {
+            log.info("Send chat history response")
+            signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue(
+                GetChatHistoryResponse(chatHistoryResponse.chatCoordinate, chatHistoryResponse.messages)
+            ))
         }
         // this handles messages from the websocket
 //        case ChatEvent(ChatCoordinate(segment, target), ChatMessage(from, message)) chatMessage: ChatMessage =>

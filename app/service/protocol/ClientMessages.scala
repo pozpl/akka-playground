@@ -37,10 +37,16 @@ object ClientMessages {
             (__ \ "messageType").format[String]
         ) (OutboundTextMessage.apply, unlift(OutboundTextMessage.unapply))
 
-    implicit val getChatWithRequestMessageFormatter: Format[GetChatWithRequest] = (
+    implicit val getChatHistoryRequestMessageFormatter: Format[GetChatHistoryRequest] = (
         (__ \ "chatCoordinate").format[ChatCoordinate] ~
             (__ \ "messageType").format[String]
-        ) (GetChatWithRequest.apply, unlift(GetChatWithRequest.unapply))
+        ) (GetChatHistoryRequest.apply, unlift(GetChatHistoryRequest.unapply))
+
+    implicit val getChatHistoryResponseMessageFormatter: Format[GetChatHistoryResponse] = (
+        (__ \ "chatCoordinate").format[ChatCoordinate] ~
+            (__ \ "messagesList").format[List[OutboundTextMessage]] ~
+            (__ \ "messageType").format[String]
+        ) (GetChatHistoryResponse.apply, unlift(GetChatHistoryResponse.unapply))
 
     implicit val unknownMessageFormatter: Format[UnknownMessage] =
         (__ \ "messageType").format[String].inmap(t => UnknownMessage(t), (u: UnknownMessage) => u.messageType)
@@ -50,7 +56,7 @@ object ClientMessages {
         (jsValue \ "messageType").as[String] match {
             case Login.MSG_TYPE => jsValue.as[Login]
             case TextMessage.MSG_TYPE => jsValue.as[TextMessage]
-            case GetChatWithRequest.MSG_TYPE => jsValue.as[GetChatWithRequest]
+            case GetChatHistoryRequest.MSG_TYPE => jsValue.as[GetChatHistoryRequest]
             case messageType => UnknownMessage(messageType)
         }
     }
@@ -58,7 +64,7 @@ object ClientMessages {
     implicit def clientMessage2JsValue(outboundMessage: ClientMessages): JsValue = {
         outboundMessage match {
             case outboundMessage: OutboundTextMessage => Json.toJson(outboundMessage)
-            case getChatWithResponse: GetChatWithResponse => Json.toJson(getChatWithResponse)
+            case getChatWithResponse: GetChatHistoryResponse => Json.toJson(getChatWithResponse)
             case _ => Json.toJson(UnknownMessage("unknown message"))
         }
     }
@@ -74,9 +80,9 @@ case class TextMessage(to: ChatCoordinate, message: String, messageType: String 
 
 case class OutboundTextMessage(from: String, chatCoordinate: ChatCoordinate, message: String, messageType: String = OutboundTextMessage.MSG_TYPE) extends ClientMessages
 
-case class GetChatWithRequest(chatCoordinate: ChatCoordinate, messageType: String) extends ClientMessages
+case class GetChatHistoryRequest(chatCoordinate: ChatCoordinate, messageType: String = GetChatHistoryRequest.MSG_TYPE) extends ClientMessages
 
-case class GetChatWithResponse(chatCoordinate: ChatCoordinate, messagesList: List[OutboundTextMessage], messageType: String) extends ClientMessages
+case class GetChatHistoryResponse(chatCoordinate: ChatCoordinate, messagesList: List[OutboundTextMessage], messageType: String = GetChatHistoryResponse.MSG_TYPE) extends ClientMessages
 
 object Login extends MessageObjectTypeAware("login")
 
@@ -88,7 +94,7 @@ object TextMessage extends MessageObjectTypeAware("text_message")
 
 object OutboundTextMessage extends MessageObjectTypeAware("outbound_text_message")
 
-object GetChatWithRequest extends MessageObjectTypeAware("get_chat_with_request")
+object GetChatHistoryRequest extends MessageObjectTypeAware("get_chat_history_request")
 
-object GetChatWithResponse extends MessageObjectTypeAware("get_chat_with_response")
+object GetChatHistoryResponse extends MessageObjectTypeAware("get_chat_history_response")
 
