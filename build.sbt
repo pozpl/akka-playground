@@ -9,7 +9,8 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq( jdbc , cache , ws   , specs2 % Test,
     "com.typesafe.slick" %% "slick" % "3.2.0",
     "org.slf4j" % "slf4j-nop" % "1.6.4",
-    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0"
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
+    "org.scalaz" %% "scalaz-core" % "7.2.10"
 )
 
 libraryDependencies += ("org.scala-stm" %% "scala-stm" % "0.7")
