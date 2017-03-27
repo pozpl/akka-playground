@@ -20,25 +20,25 @@ trait ChatRoutingService {
         }
         case getHistory: ChatHistoryRequest => {
             val senderRef = sender()
-            if (getHistory.chatHistoryWithChatCoordinate.segment == ChatSegments.Individual) {
+            if (getHistory.chatHistoryWithChatCoordinate.segment == ChatSegments.Individual &&
+                getHistory.chatHistoryWithChatCoordinate.target.isDefined) {
+                val pearUid = getHistory.chatHistoryWithChatCoordinate.target.get
+                val initiatorUserUid = getHistory.initiatorUserUid
                 val returnChatCoordinate = getHistory.chatHistoryWithChatCoordinate
-                val historyResponse: Option[Future[List[OutboundTextMessage]]] = getChatHistory(getHistory)
-                historyResponse.map(_.map((messagesList) => {
+                val historyResponse: Future[List[OutboundTextMessage]] = getChatHistory(pearUid, initiatorUserUid)
+                historyResponse.map((messagesList) => {
                     senderRef ! ChatHistoryResponse(returnChatCoordinate, messagesList)
-                }))
+                })
             }
         }
     }
 
-    private def getChatHistory(getHistory: ChatHistoryRequest): Option[Future[List[OutboundTextMessage]]] = {
-        val pearUidOpt = getHistory.chatHistoryWithChatCoordinate.target
-        pearUidOpt.map(pearUid => {
-            conversationsService.getTextMessagesForPrivateChat(getHistory.initiatorUserUid, pearUid)
-                .map((list: List[ReceivedTextMessage]) => {
-                    list.map(receivedMessage => {
-                        OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
-                    })
-                })
+    private def getChatHistory(initiatorUserUid: String, pearUid: String): Future[List[OutboundTextMessage]] = {
+        conversationsService.getTextMessagesForPrivateChat(initiatorUserUid, pearUid).map((list: List[ReceivedTextMessage]) => {
+            list.map(receivedMessage => {
+                OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
+            })
         })
+
     }
 }
