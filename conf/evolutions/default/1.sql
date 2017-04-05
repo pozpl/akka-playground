@@ -2,7 +2,7 @@
 
 # --- !Ups
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   uid varchar(255) NOT NULL,
   login varchar(255) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 
-CREATE TABLE messages(
+CREATE TABLE  IF NOT EXISTS messages(
   id bigint(20) NOT NULL AUTO_INCREMENT,
   from_uid  varchar(255) NOT NULL,
   to_segment varchar(255) NOT NULL,

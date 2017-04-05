@@ -13,7 +13,7 @@ import slick.jdbc.MySQLProfile.api._
 trait UsersTable{
     protected class Users(tag: Tag) extends Table[User](tag, "users") {
 
-        def id = column[Int]("id", O.PrimaryKey,O.AutoInc)
+        def id = column[Long]("id", O.PrimaryKey,O.AutoInc)
         def uid = column[String]("uid")
         def login = column[String]("login")
         def mobile = column[Option[Long]]("mobile")
@@ -32,7 +32,7 @@ trait MessagesTable{
         def from = column[String]("from_uid")
         def toSegment = column[String]("to_segment")
         def toTarget = column[Option[String]]("to_target")
-        def dateTime = column[Date]("date")
+        def dateTime = column[Date]("date")(utilDate2SqlTimestampMapper)
         def text = column[String]("text")
 
         implicit  val utilDate2SqlTimestampMapper = MappedColumnType.base[java.util.Date, java.sql.Timestamp](
