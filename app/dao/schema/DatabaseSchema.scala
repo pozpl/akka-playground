@@ -29,10 +29,11 @@ trait UsersTable{
 trait MessagesTable{
     protected class Messages(tag: Tag) extends Table[Message](tag, "messages") {
         def id = column[Long]("id", O.PrimaryKey,O.AutoInc)
-        def from = column[String]("from")
-        def toSector = column[String]("to_sector")
+        def from = column[String]("from_uid")
+        def toSegment = column[String]("to_segment")
         def toTarget = column[Option[String]]("to_target")
         def dateTime = column[Date]("date")
+        def text = column[String]("text")
 
         implicit  val utilDate2SqlTimestampMapper = MappedColumnType.base[java.util.Date, java.sql.Timestamp](
             utilDate => new java.sql.Timestamp(utilDate.getTime()) ,
@@ -40,7 +41,7 @@ trait MessagesTable{
         )
 
         override def * =
-            (id.?, from, toSector, toTarget, dateTime) <> (Message.tupled, Message.unapply)
+            (id.?, from, toSegment, toTarget, dateTime, text) <> (Message.tupled, Message.unapply)
     }
 
     protected val messages = TableQuery[Messages]

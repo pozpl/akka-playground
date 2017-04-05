@@ -13,7 +13,8 @@ libraryDependencies ++= Seq( jdbc , cache , ws   , specs2 % Test,
     "org.scalaz" %% "scalaz-core" % "7.2.10",
     "mysql" % "mysql-connector-java" % "5.1.34",
     "org.scala-stm" %% "scala-stm" % "0.7",
-    "com.typesafe.play" %% "play-slick" % "2.0.0"
+    "com.typesafe.play" %% "play-slick" % "2.0.0",
+    evolutions
 )
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
