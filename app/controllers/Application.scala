@@ -16,7 +16,7 @@ import service.session.ChatService
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class Application @Inject()(actorSystem: ActorSystem, eventBus: ChatEventBus,
+class Application @Inject()(implicit val actorSystem: ActorSystem, eventBus: ChatEventBus,
                             implicit val mat: Materializer,
                             implicit val ec: ExecutionContext)  extends Controller {
 
@@ -32,7 +32,7 @@ class Application @Inject()(actorSystem: ActorSystem, eventBus: ChatEventBus,
   
   def socket = WebSocket.accept[JsValue, JsValue] {
     (request: RequestHeader) => {
-      ActorFlow.actorRef((out:ActorRef )=> Props(new ClientActor(out, chatService, eventBus)))
+      ActorFlow.actorRef((out:ActorRef )=> Props(new ClientActor(out, chatService, eventBus)))(actorSystem, mat)
     }
   }
 
