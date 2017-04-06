@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import dao.schema.UsersTable
 import models.db.User
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.jdbc.JdbcProfile
+import slick.driver.JdbcProfile
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 class UsersDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)
     extends HasDatabaseConfigProvider[JdbcProfile] with UsersTable{
 
-    import dbConfig.profile.api._
+    import dbConfig.driver.api._
     
     def getByUid(uid:String):Future[Option[User]] = {
         db.run((for (user <- users if user.uid === uid) yield user).result.headOption)

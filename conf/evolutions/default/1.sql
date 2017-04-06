@@ -18,7 +18,8 @@ CREATE TABLE  IF NOT EXISTS messages(
   to_segment varchar(255) NOT NULL,
   to_target varchar(255),
   `date` TIMESTAMP,
-  text TEXT
+  text TEXT,
+  PRIMARY KEY (id)
 );
 
 # --- !Downs

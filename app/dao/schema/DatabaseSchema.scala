@@ -3,7 +3,8 @@ package dao.schema
 import java.util.Date
 
 import models.db.{Message, User}
-import slick.jdbc.MySQLProfile.api._
+import slick.driver.MySQLDriver.api._
+
 
 
 
