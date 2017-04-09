@@ -16,10 +16,17 @@ libraryDependencies ++= Seq(
     "mysql" % "mysql-connector-java" % "5.1.34",
     "org.scala-stm" %% "scala-stm" % "0.7",
     "com.typesafe.play" %% "play-slick" % "2.0.0",
-    "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0"
+    "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
+    "com.mohiva" %% "play-silhouette" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test"
 )
 
-unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
+unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
+
+resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
