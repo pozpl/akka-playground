@@ -1,15 +1,13 @@
 # --- !Ups
 
 create table user (
-  id bigint(20) NOT NULL AUTO_INCREMENT,
   user_id VARCHAR(100) NOT NULL,
   first_name VARCHAR(100),
   last_name VARCHAR(100),
   full_name VARCHAR(200),
   email VARCHAR(256),
   avatar_url VARCHAR(256),
-  PRIMARY KEY(id),
-  KEY(user_id)
+  PRIMARY KEY(user_id)
 );
 
 
