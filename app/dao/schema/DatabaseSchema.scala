@@ -9,18 +9,18 @@ import slick.lifted.ProvenShape.proveShapeOf
 
 
 
-trait DBTableDefinitions {
+trait DbTableDefinitions {
 
     protected val driver: JdbcProfile
     import driver.api._
 
     case class DBUser (
-                          userID: String,
+                          userId: String,
                           firstName: Option[String],
                           lastName: Option[String],
                           fullName: Option[String],
                           email: Option[String],
-                          avatarURL: Option[String]
+                          avatarUrl: Option[String]
                       )
 
     class Users(tag: Tag) extends Table[DBUser](tag, "user") {
@@ -29,8 +29,8 @@ trait DBTableDefinitions {
         def lastName = column[Option[String]]("last_name")
         def fullName = column[Option[String]]("full_name")
         def email = column[Option[String]]("email")
-        def avatarURL = column[Option[String]]("avatar_url")
-        def * = (id, firstName, lastName, fullName, email, avatarURL) <> (DBUser.tupled, DBUser.unapply)
+        def avatarUrl = column[Option[String]]("avatar_url")
+        def * = (id, firstName, lastName, fullName, email, avatarUrl) <> (DBUser.tupled, DBUser.unapply)
     }
 
     case class DBLoginInfo (id: Option[Long], providerId: String, providerKey: String)

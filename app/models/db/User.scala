@@ -8,7 +8,7 @@ import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 /**
   * The user object.
   *
-  * @param userID    The unique ID of the user.
+  * @param userId    The unique ID of the user.
   * @param loginInfo The linked login info.
   * @param firstName Maybe the first name of the authenticated user.
   * @param lastName  Maybe the last name of the authenticated user.
@@ -17,8 +17,7 @@ import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
   * @param avatarURL Maybe the avatar URL of the authenticated provider.
   */
 case class User(
-    id: Option[Long],
-    userID: UUID,
+    userId: UUID,
     loginInfo: LoginInfo,
     firstName: Option[String],
     lastName: Option[String],

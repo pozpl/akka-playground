@@ -1,7 +1,7 @@
 package dao.repository
 
 import com.google.inject.Inject
-import dao.schema.MessagesTable
+import dao.schema.DbTableDefinitions._
 import models.db.Message
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
