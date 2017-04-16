@@ -26,9 +26,7 @@ import scala.language.postfixOps
   * The credentials auth controller.
   *
   * @param messagesApi            The Play messages API.
-  * @param env                    The Silhouette environment.
   * @param userService            The user service implementation.
-  * @param authInfoRepository     The auth info repository implementation.
   * @param credentialsProvider    The credentials provider.
   * @param socialProviderRegistry The social provider registry.
   * @param configuration          The Play configuration.
@@ -36,9 +34,7 @@ import scala.language.postfixOps
   */
 class CredentialsAuthController @Inject()(
                                              val messagesApi: MessagesApi,
-                                             val env: Environment[DefaultEnv],
                                              userService: UserService,
-                                             authInfoRepository: AuthInfoRepository,
                                              credentialsProvider: CredentialsProvider,
                                              socialProviderRegistry: SocialProviderRegistry,
                                              configuration: Configuration,
@@ -63,7 +59,7 @@ class CredentialsAuthController @Inject()(
                     userService.retrieve(loginInfo).flatMap {
                         case Some(user) =>
                             val c = configuration.underlying
-                            env.authenticatorService.create(loginInfo).map {
+                            silhouette.env.authenticatorService.create(loginInfo).map {
                                 case authenticator if data.rememberMe =>
                                     authenticator.copy(
                                         expirationDateTime = clock.now + c.as[FiniteDuration]("silhouette.authenticator.rememberMe.authenticatorExpiry"),
@@ -72,9 +68,9 @@ class CredentialsAuthController @Inject()(
                                     )
                                 case authenticator => authenticator
                             }.flatMap { authenticator =>
-                                env.eventBus.publish(LoginEvent(user, request))
-                                env.authenticatorService.init(authenticator).flatMap { v =>
-                                    env.authenticatorService.embed(v, result)
+                                silhouette.env.eventBus.publish(LoginEvent(user, request))
+                                silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
+                                    silhouette.env.authenticatorService.embed(v, result)
                                 }
                             }
                         case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
