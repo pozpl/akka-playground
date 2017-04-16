@@ -1,11 +1,10 @@
 package dao.repository
 
 import com.google.inject.Inject
-import dao.schema.DbTableDefinitions._
+import dao.schema.DbTableDefinitions
 import models.db.Message
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
 
@@ -13,9 +12,9 @@ import scala.concurrent.Future
   * Created by pozpl on 04.04.17.
   */
 class MessagesDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-    extends HasDatabaseConfigProvider[JdbcProfile] with MessagesTable {
+    extends DaoSlick with DbTableDefinitions {
 
-    import dbConfig.driver.api._
+    import driver.api._
     
 
     def getById(id: Long): Future[Option[Message]] = {

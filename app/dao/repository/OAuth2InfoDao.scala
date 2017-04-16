@@ -13,7 +13,7 @@ import scala.concurrent.Future
 /**
   * The DAO to store the OAuth2 information.
   */
-class OAuth2InfoDAO @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)
+class OAuth2InfoDao @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)
     extends DelegableAuthInfoDAO[OAuth2Info] with DaoSlick {
 
     import driver.api._

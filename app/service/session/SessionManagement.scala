@@ -3,7 +3,7 @@ package service.session
 import actors.ChatServer
 import akka.actor.{ActorRef, Terminated}
 import akka.pattern.pipe
-import models.User
+import models.db.User
 import service.protocol.{Login, UserActivated}
 import service.routing.{ChatCoordinate, ChatSegments}
 
@@ -34,13 +34,13 @@ trait SessionManagement {
                     }
                 }) pipeTo(self)
         }
-        case SessionManagementUserAuthorized(userUid, userActor) => {
-            log.info("User [%s] was unproved to logged in".format(userUid))
-            log.info("User actor is [%s]".format(userActor))
-            chatEventBus.subscribe(userActor, ChatCoordinate(ChatSegments.Individual, Some(userUid)))
-            context.watch(userActor)
-            userActor ! UserActivated(User(userUid))
-        }
+//        case SessionManagementUserAuthorized(userUid, userActor) => {
+//            log.info("User [%s] was unproved to logged in".format(userUid))
+//            log.info("User actor is [%s]".format(userActor))
+//            chatEventBus.subscribe(userActor, ChatCoordinate(ChatSegments.Individual, Some(userUid)))
+//            context.watch(userActor)
+//            userActor ! UserActivated(User(userUid))
+//        }
         case Terminated(terminated) => {
             log.info("Unsubscribing actor %s".format(terminated))
             chatEventBus.unsubscribe(terminated)

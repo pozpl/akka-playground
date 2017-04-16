@@ -1,6 +1,6 @@
 package service.protocol
 
-import models.User
+import models.db.User
 import service.routing.ChatCoordinate
 
 /**

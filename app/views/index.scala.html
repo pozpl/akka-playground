@@ -1,6 +1,7 @@
-@(message: String)
+@import models.db.User
+@(message: String, user: Option[User], webJarsAssets: WebJarAssets)(implicit messages: Messages)
 
-@main("Welcome to Play") {
+@main("home.title", user, webJarsAssets) {
     <div ng-app="ChatApp">
         <div ng-controller="ChatController as chat">
             <form>

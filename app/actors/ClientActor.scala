@@ -1,7 +1,7 @@
 package actors
 
 import akka.actor.{Actor, ActorRef}
-import models.User
+import models.db.User
 import play.api.libs.json.JsValue
 import service.protocol._
 import service.routing.ChatEventBus
@@ -22,11 +22,11 @@ class ClientActor (out: ActorRef, chatService: ActorRef, eventBus: ChatEventBus)
             case login: Login => chatService ! login
             case textMessage: TextMessage => {
                 val timeStump:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
-                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.uid, timeStump))
+                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.userId.toString, timeStump))
             }
             case getChatHistory: GetChatHistoryRequest => {
                 log.info("Get chat history request " + getChatHistory.toString)
-                signedInUser.map((user:User) => chatService ! ChatHistoryRequest(user.uid, getChatHistory.chatCoordinate))
+                signedInUser.map((user:User) => chatService ! ChatHistoryRequest(user.userId.toString, getChatHistory.chatCoordinate))
             }
         }
     }

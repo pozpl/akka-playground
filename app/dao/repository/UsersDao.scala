@@ -105,7 +105,7 @@ class UserDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
       * @return The saved user.
       */
     def save(user: User) = {
-        val dbUser = DBUser(user.userId.toString, user.firstName, user.lastName, user.fullName, user.email, user.avatarURL)
+        val dbUser = DBUser(user.userId.toString, user.firstName, user.lastName, user.fullName, user.email, user.avatarUrl)
         val dbLoginInfo = DBLoginInfo(None, user.loginInfo.providerID, user.loginInfo.providerKey)
         // We don't have the LoginInfo id so we try to get it first.
         // If there is no LoginInfo yet for this user we retrieve the id on insertion.

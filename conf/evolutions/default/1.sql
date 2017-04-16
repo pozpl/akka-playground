@@ -54,12 +54,12 @@ create table oauth2_info (
 );
 
 create table openid_info (
-  id VARCHAR(256) NOT NULL PRIMARY KEY,
+  id VARCHAR(100) NOT NULL PRIMARY KEY,
   login_info_id BIGINT(20) NOT NULL,
   CONSTRAINT opid_login_info_id_fk FOREIGN KEY (login_info_id) REFERENCES login_info(id) ON DELETE CASCADE
 );
 create table openid_attributes (
-  id VARCHAR(256) NOT NULL,
+  id VARCHAR(100) NOT NULL PRIMARY KEY ,
   `key` VARCHAR(256) NOT NULL,
   `value` VARCHAR(256) NOT NULL
 );
