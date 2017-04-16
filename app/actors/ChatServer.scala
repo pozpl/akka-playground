@@ -1,7 +1,5 @@
 package actors
 
-import akka.actor.ActorRef
-import service.autorisation.AuthorizationService
 import service.conversations.TConversationsService
 import service.routing.ChatEventBus
 
@@ -14,8 +12,6 @@ trait ChatServer extends ActorWithLogging {
 
     //    val storage: ActorRef
     val chatEventBus: ChatEventBus
-
-    val authorizationService : AuthorizationService
 
     val conversationsService: TConversationsService
 

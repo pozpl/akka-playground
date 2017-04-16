@@ -5,12 +5,12 @@ import javax.inject.{Inject, Singleton}
 import actors.ClientActor
 import akka.actor._
 import akka.stream.Materializer
-import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
+import models.db.User
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import service.autorisation.AuthorizationServiceMemory
 import service.conversations.ConversationsServiceImplInMemory
 import service.routing.ChatEventBus
 import service.session.ChatService
@@ -35,16 +35,28 @@ class Application @Inject()(implicit val actorSystem: ActorSystem, eventBus: Cha
     }
 
 
-    var authService = new AuthorizationServiceMemory();
     val conversationsService = new ConversationsServiceImplInMemory;
-    val chatService = actorSystem.actorOf(Props(new ChatService(eventBus, authService, conversationsService)))
+    val chatService = actorSystem.actorOf(Props(new ChatService(eventBus, conversationsService)))
 
 
-    def socket = WebSocket.accept[JsValue, JsValue] {
-        (request: RequestHeader) => {
-            ActorFlow.actorRef((out: ActorRef) => Props(new ClientActor(out, chatService, eventBus)))(actorSystem, mat)
+    def socket = WebSocket.acceptOrResult[JsValue, JsValue] { implicit request =>
+        implicit val req = Request(request, AnyContentAsEmpty)
+        silhouette.SecuredRequestHandler { securedRequest =>
+            Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
+        }.map {
+            case HandlerResult(r, None) => Left(Forbidden)
+            case HandlerResult(r, Some(user)) => Right(ActorFlow.actorRef((out: ActorRef) =>  ClientActor.props(user, out, chatService)))
         }
     }
 
+//    def socket = WebSocket.tryAcceptWithActor[String, String] { request =>
+//        implicit val req = Request(request, AnyContentAsEmpty)
+//        silhouette.SecuredRequestHandler { securedRequest =>
+//            Future.successful(HandlerResult(Ok, Some(securedRequest.identity)))
+//        }.map {
+//            case HandlerResult(r, Some(user)) => Right(MyWebSocketActor.props(user) _)
+//            case HandlerResult(r, None) => Left(r)
+//        }
+//    }
 
 }

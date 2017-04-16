@@ -72,7 +72,7 @@ object ClientMessages {
 
 }
 
-case class Login(userUid: String, messageType: String = Login.MSG_TYPE) extends ClientMessages
+//case class Login(userUid: String, messageType: String = Login.MSG_TYPE) extends ClientMessages
 
 case class UnknownMessage(messageType: String = UnknownMessage.MSG_TYPE) extends ClientMessages
 
