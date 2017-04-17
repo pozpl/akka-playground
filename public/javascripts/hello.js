@@ -13,7 +13,7 @@ angular.module("ChatApp").controller("ChatController",
 
 		chat.getHistoryUserUid = null;
 
-		chat.register = register;
+		// chat.register = register;
 		chat.getHistory = getHistory;
 
 		init();
@@ -25,10 +25,10 @@ angular.module("ChatApp").controller("ChatController",
 			// what to do when we receive message from the webserver
 			chat.ws.onmessage = onmessage;
 
-			chat.username = $cookies.get('username') ? $cookies.get('username') : "";
-			if (chat.username && chat.username != "") {
-				chat.register();
-			}
+			// chat.username = $cookies.get('username') ? $cookies.get('username') : "";
+			// if (chat.username && chat.username != "") {
+			// 	chat.register();
+			// }
 		}
 
 		// what happens when user enters message
@@ -50,14 +50,14 @@ angular.module("ChatApp").controller("ChatController",
 			chat.currentMessage = "";
 		};
 
-		function register() {
-			sendViaWs(JSON.stringify({
-				uid: chat.username,
-				messageType: "login"
-			}));
-
-			$cookies.put("username", chat.username);
-		}
+		// function register() {
+		// 	sendViaWs(JSON.stringify({
+		// 		uid: chat.username,
+		// 		messageType: "login"
+		// 	}));
+		//
+		// 	$cookies.put("username", chat.username);
+		// }
 
 
 		function onmessage (msg) {
