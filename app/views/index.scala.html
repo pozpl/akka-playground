@@ -1,5 +1,5 @@
 @import models.db.User
-@(message: String, user: Option[User], webJarsAssets: WebJarAssets)(implicit messages: Messages)
+@(user: Option[User], webJarsAssets: WebJarAssets)(implicit messages: Messages)
 
 @main("home.title", user, webJarsAssets) {
     <div ng-app="ChatApp">

@@ -35,7 +35,7 @@ class ApplicationController @Inject()(
     def index = silhouette.UserAwareAction.async { implicit request =>
 //        Future.successful(Ok(views.html.home(request.identity)))
         request.identity match {
-            case Some(user) => Future.successful(Ok(views.html.home(user, webJarAssets)))
+            case Some(user) => Future.successful(Ok(views.html.index(Some(user), webJarAssets)))
             case None => Future.successful(Redirect(routes.CredentialsAuthController.authenticate()))
         }
     }

@@ -14,11 +14,6 @@ abstract class MessageObjectTypeAware(val MSG_TYPE: String)
 
 object ClientMessages {
 
-    implicit val loginFormatter: Format[Login] = (
-        (__ \ "uid").format[String] and
-            (__ \ "messageType").format[String]
-        ) (Login.apply, unlift(Login.unapply))
-
     implicit val chatCoordinateFormatter: Format[ChatCoordinate] = (
         (__ \ "segment").format[String] ~
             (__ \ "target").formatNullable[String]
@@ -54,7 +49,6 @@ object ClientMessages {
 
     implicit def jsValue2ClientMessage(jsValue: JsValue): ClientMessages = {
         (jsValue \ "messageType").as[String] match {
-            case Login.MSG_TYPE => jsValue.as[Login]
             case TextMessage.MSG_TYPE => jsValue.as[TextMessage]
             case GetChatHistoryRequest.MSG_TYPE => jsValue.as[GetChatHistoryRequest]
             case messageType => UnknownMessage(messageType)
@@ -72,7 +66,6 @@ object ClientMessages {
 
 }
 
-//case class Login(userUid: String, messageType: String = Login.MSG_TYPE) extends ClientMessages
 
 case class UnknownMessage(messageType: String = UnknownMessage.MSG_TYPE) extends ClientMessages
 
@@ -83,8 +76,6 @@ case class OutboundTextMessage(from: String, chatCoordinate: ChatCoordinate, mes
 case class GetChatHistoryRequest(chatCoordinate: ChatCoordinate, messageType: String = GetChatHistoryRequest.MSG_TYPE) extends ClientMessages
 
 case class GetChatHistoryResponse(chatCoordinate: ChatCoordinate, messagesList: List[OutboundTextMessage], messageType: String = GetChatHistoryResponse.MSG_TYPE) extends ClientMessages
-
-object Login extends MessageObjectTypeAware("login")
 
 object UnknownMessage extends MessageObjectTypeAware("unknown")
 
