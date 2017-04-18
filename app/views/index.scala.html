@@ -4,30 +4,40 @@
 @main(messages("home.title"), user, webJarsAssets) {
     <div ng-app="ChatApp">
         <div ng-controller="ChatController as chat">
-            <form>
-                <input type="text" placeholder="Enter name..."
-                ng-model="chat.username">
-                <input type="submit" value="Send"
-                ng-click="chat.register()">
+            <div class="col-md-7">
+                <form>
+                    <input type="text" placeholder="Enter name..."
+                    ng-model="chat.username">
+                    <input type="submit" value="Send"
+                    ng-click="chat.register()">
 
-                <input type="text" placeholder="To..."
-                ng-model="chat.receiver">
+                    <input type="text" placeholder="To..."
+                    ng-model="chat.receiver">
 
-                <input type="text" placeholder="Enter message..."
-                ng-model="chat.currentMessage">
-                <input type="submit" value="Send"
-                ng-click="chat.sendMessage()">
-            </form>
-            <div>
-                <input type="text" placeholder="Get history of messages with"
-                ng-model="chat.getHistoryUserUid">
-                <button ng-click="chat.getHistory()">Get history</button>
+                    <input type="text" placeholder="Enter message..."
+                    ng-model="chat.currentMessage">
+                    <input type="submit" value="Send"
+                    ng-click="chat.sendMessage()">
+                </form>
+                <div>
+                    <input type="text" placeholder="Get history of messages with"
+                    ng-model="chat.getHistoryUserUid">
+                    <button ng-click="chat.getHistory()">Get history</button>
+                </div>
+                <ul>
+                    <li ng-repeat="msg in chat.messages track by $index">
+                        {{msg}}
+                    </li>
+                </ul>
             </div>
-            <ul>
-                <li ng-repeat="msg in chat.messages track by $index">
-                    {{msg}}
-                </li>
-            </ul>
+            <div class="col-md-5">
+                <ul>
+                    <li ng-repeat="user in chat.usersList">
+                        {{user.email}}
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
 

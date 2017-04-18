@@ -1,7 +1,11 @@
-angular.module("ChatApp", ['ngRoute', 'ngCookies']);
+(function () {
+	angular.module("ChatApp", ['ngRoute', 'ngCookies']);
 
-angular.module("ChatApp").controller("ChatController",
-	function ($scope, $timeout, $location, $cookies) {
+	angular.module("ChatApp").controller("ChatController", ChatController);
+
+	ChatController.$inject = ['$timeout', '$location', 'UsersListService'];
+
+	function ChatController($timeout, $location, UsersListService) {
 
 		// binding model for the UI
 		var chat = this;
@@ -10,6 +14,7 @@ angular.module("ChatApp").controller("ChatController",
 		chat.currentMessage = "";
 		chat.username = "";
 		chat.receiver = "";
+		chat.usersList = [];
 
 		chat.getHistoryUserUid = null;
 
@@ -29,6 +34,11 @@ angular.module("ChatApp").controller("ChatController",
 			// if (chat.username && chat.username != "") {
 			// 	chat.register();
 			// }
+			UsersListService.list().then(function (message) {
+				if(message != null){
+					chat.usersList = message.data;
+				}
+			})
 		}
 
 		// what happens when user enters message
@@ -60,14 +70,14 @@ angular.module("ChatApp").controller("ChatController",
 		// }
 
 
-		function onmessage (msg) {
+		function onmessage(msg) {
 			$timeout(function () {
-				if(msg && msg.data){
+				if (msg && msg.data) {
 					var parsedData = JSON.parse(msg.data);
-					if(parsedData.messageType == "outbound_text_message"){
+					if (parsedData.messageType == "outbound_text_message") {
 						chat.messages.push(parsedData.from + ":" + parsedData.message);
-					}else if(parsedData.messageType == "get_chat_history_response"){
-						angular.forEach(parsedData.messagesList, function(message){
+					} else if (parsedData.messageType == "get_chat_history_response") {
+						angular.forEach(parsedData.messagesList, function (message) {
 							chat.messages.push(message.from + ":" + message.message);
 						})
 					}
@@ -104,4 +114,20 @@ angular.module("ChatApp").controller("ChatController",
 				}, interval);
 			}
 		}
-	});
+	}
+
+	angular.module("ChatApp").service("UsersListService", UsersListService);
+
+	UsersListService.$inject = ['$http'];
+
+	function UsersListService($http){
+
+
+		this.list = function(){
+			return $http.get("/users/list");
+		}
+
+	}
+
+
+})();
