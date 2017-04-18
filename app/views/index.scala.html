@@ -1,7 +1,7 @@
 @import models.db.User
 @(user: Option[User], webJarsAssets: WebJarAssets)(implicit messages: Messages)
 
-@main("home.title", user, webJarsAssets) {
+@main(messages("home.title"), user, webJarsAssets) {
     <div ng-app="ChatApp">
         <div ng-controller="ChatController as chat">
             <form>
