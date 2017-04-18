@@ -28,4 +28,10 @@ trait UserService extends IdentityService[User] {
       * @return The user for whom the profile was saved.
       */
     def save(profile: CommonSocialProfile): Future[User]
+
+    /**
+      * List all users
+      * @return
+      */
+    def list():Future[Seq[User]]
 }

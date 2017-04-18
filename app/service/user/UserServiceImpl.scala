@@ -26,6 +26,8 @@ class UserServiceImpl @Inject() (userDao: UserDao) extends UserService {
       */
     def retrieve(loginInfo: LoginInfo): Future[Option[User]] = userDao.find(loginInfo)
 
+    def list():Future[Seq[User]] = userDao.list()
+
     /**
       * Saves a user.
       *

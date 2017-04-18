@@ -28,6 +28,13 @@ trait UserDao {
     def find(loginInfo: LoginInfo): Future[Option[User]]
 
     /**
+      * Get list of all users currently presented in the system
+      *
+      * @return
+      */
+    def list(): Future[Seq[User]]
+
+    /**
       * Finds a user by its user ID.
       *
       * @param userID The ID of the user to find.
@@ -58,7 +65,7 @@ class UserDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
       * @param loginInfo The login info of the user to find.
       * @return The found user or None if no user for the given login info could be found.
       */
-    def find(loginInfo: LoginInfo):Future[Option[User]] = {
+    def find(loginInfo: LoginInfo): Future[Option[User]] = {
         val userQuery = for {
             dbLoginInfo <- loginInfoQuery(loginInfo)
             dbUserLoginInfo <- slickUserLoginInfos.filter(_.loginInfoId === dbLoginInfo.id)
@@ -70,6 +77,33 @@ class UserDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
             }
         }
     }
+
+    /**
+      * Get list of all users currently presented in the system
+      *
+      * @return
+      */
+    override def list(): Future[Seq[User]] = {
+        val query = for {
+            dbUser <- slickUsers
+            dbUserLoginInfo <- slickUserLoginInfos.filter(_.userId === dbUser.id)
+            dbLoginInfo <- slickLoginInfos.filter(_.id === dbUserLoginInfo.loginInfoId)
+        } yield (dbUser, dbLoginInfo)
+        db.run(query.result).map { (resultSeq: Seq[(DBUser, DBLoginInfo)]) =>
+            resultSeq.map {
+                case (user, loginInfo) =>
+                    User(
+                        UUID.fromString(user.userId),
+                        LoginInfo(loginInfo.providerId, loginInfo.providerKey),
+                        user.firstName,
+                        user.lastName,
+                        user.fullName,
+                        user.email,
+                        user.avatarUrl)
+            }
+        }
+    }
+
 
     /**
       * Finds a user by its user ID.
@@ -129,6 +163,7 @@ class UserDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
         // run actions and return user afterwards
         db.run(actions).map(_ => user)
     }
+
 }
 
 

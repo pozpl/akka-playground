@@ -6,6 +6,8 @@
 #GET     /                           controllers.Application.index
 GET     /socket                     controllers.Application.socket
 
+GET    /users/list                  controllers.UsersListController.list
+
 GET         /                                controllers.ApplicationController.index()
 GET         /signIn                          controllers.ApplicationController.signIn()
 GET         /signUp                          controllers.ApplicationController.signUp()
