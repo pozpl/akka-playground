@@ -195,20 +195,5 @@ trait DbTableDefinitions {
 }
 
 
-//trait UsersTable{
-//    protected class Users(tag: Tag) extends Table[User](tag, "users") {
-//
-//        def id = column[Long]("id", O.PrimaryKey,O.AutoInc)
-//        def uid = column[String]("uid")
-//        def login = column[String]("login")
-//        def mobile = column[Option[Long]]("mobile")
-//        def email = column[Option[String]]("email")
-//
-//        override def * =
-//            (id.?, uid, login, mobile, email) <>(User.tupled, User.unapply)
-//    }
-//
-//    protected val users = TableQuery[Users]
-//}
 
 
