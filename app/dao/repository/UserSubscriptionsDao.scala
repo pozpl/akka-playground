@@ -25,6 +25,8 @@ trait UserSubscriptionsDao {
       */
     def find(user: User): Future[List[User]]
 
+    def find(user:User, userSubscription: User): Future[Option[UserIndividualSubscription]]
+
     /**
       * Save subscription
       *
@@ -87,4 +89,6 @@ class UserSubscriptionsDaoImpl @Inject()(protected val dbConfigProvider: Databas
         } yield dbSubscription
         db.run(query.result.headOption)
     }
+
+    override def find(user: User, userSubscription: User): Future[Option[UserIndividualSubscription]] = ???
 }
