@@ -8,6 +8,7 @@ import dao.schema.UserSubscriptionsSchema
 import models.db.{User, UserIndividualSubscription}
 import play.api.db.slick.DatabaseConfigProvider
 
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
 /**
@@ -23,7 +24,7 @@ trait UserSubscriptionsDao {
       * @param user
       * @return
       */
-    def find(user: User): Future[List[User]]
+    def find(user: User): Future[Seq[User]]
 
     def find(user:User, userSubscription: User): Future[Option[UserIndividualSubscription]]
 

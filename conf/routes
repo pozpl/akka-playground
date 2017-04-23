@@ -4,9 +4,10 @@
 
 # Home page
 #GET     /                           controllers.Application.index
-GET     /socket                     controllers.Application.socket
+GET         /socket                          controllers.Application.socket
 
-GET    /users/list                  controllers.UsersListController.list
+GET         /users/list                      controllers.UsersListController.list
+GET         /user/subscriptions/list         controllers.UserSubscriptionsController.list
 
 GET         /                                controllers.ApplicationController.index()
 GET         /signIn                          controllers.ApplicationController.signIn()
@@ -17,7 +18,7 @@ POST        /authenticate/credentials        controllers.CredentialsAuthControll
 POST        /signUp                          controllers.SignUpController.signUp
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET    /webjars/*file                   controllers.WebJarAssets.at(file)
+GET         /assets/*file                    controllers.Assets.at(path="/public", file)
+GET         /webjars/*file                   controllers.WebJarAssets.at(file)
 
     

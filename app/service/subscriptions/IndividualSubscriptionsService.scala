@@ -6,6 +6,7 @@ import dao.repository.UserSubscriptionsDao
 import models.db.{User, UserIndividualSubscription}
 
 import scala.concurrent.Future
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 /**
   * Created by pozpl on 21.04.17.
@@ -44,7 +45,7 @@ class IndividualSubscriptionsServiceImpl @Inject() (userSubscriptionsDao: UserSu
         foundSubscription.flatMap((subOpt:Option[UserIndividualSubscription]) => subOpt match {
             case Some(subscription) => Future.successful(subscription)
             case None => {
-                val userIndividualSubscription = new UserIndividualSubscription(None[Int], user.userId.toString, userToSubscribe.userId.toString, 0)
+                val userIndividualSubscription = new UserIndividualSubscription(None, user.userId.toString, userToSubscribe.userId.toString, 0)
                 userSubscriptionsDao.save(userIndividualSubscription)
             }
         })
