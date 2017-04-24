@@ -95,7 +95,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
       * @param facebookProvider The Facebook provider implementation.
       * @param googleProvider   The Google provider implementation.
       * @param vkProvider       The VK provider implementation.
-      * @param clefProvider     The Clef provider implementation.
       * @param twitterProvider  The Twitter provider implementation.
       * @param xingProvider     The Xing provider implementation.
       * @param yahooProvider    The Yahoo provider implementation.
