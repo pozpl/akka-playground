@@ -3,7 +3,7 @@ package controllers
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import models.db.User
+import models.db.{User, UserIndividualSubscription}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json
 import play.api.mvc.Controller
@@ -34,5 +34,23 @@ class UserSubscriptionsController @Inject()(
             case None => Future.successful(Redirect(routes.CredentialsAuthController.authenticate()))
         }
     }
+
+    def subscribe = silhouette.UserAwareAction.async(parse.json) {  implicit request =>
+
+        implicit val userWriter = Json.writes[User]
+        implicit val userReader = Json.reads[User]
+        implicit val subscriptionWriter = Json.writes[UserIndividualSubscription]
+
+        request.identity match {
+            case Some(owner) => {
+                val userToSubscribe = request.body.as[User]
+                individualSubscriptionsService.subscribeToUser(owner, userToSubscribe)
+                    .map(userIndividualSubscription => Ok(Json.toJson(userIndividualSubscription)))
+            }
+            case None => Future.successful(Redirect(routes.CredentialsAuthController.authenticate()))
+        }
+    }
+
+
 
 }

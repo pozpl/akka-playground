@@ -91,5 +91,11 @@ class UserSubscriptionsDaoImpl @Inject()(protected val dbConfigProvider: Databas
         db.run(query.result.headOption)
     }
 
-    override def find(user: User, userSubscription: User): Future[Option[UserIndividualSubscription]] = ???
+    override def find(user: User, userSubscription: User): Future[Option[UserIndividualSubscription]] = {
+        val query = for {
+            dbSubscription <- userSubscriptions
+            if dbSubscription.userUid  === user.userId.toString  && dbSubscription.subscribedUserUid === userSubscription.userId.toString
+        }yield dbSubscription
+        db.run(query.result.headOption)
+    }
 }

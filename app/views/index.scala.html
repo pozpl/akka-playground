@@ -30,13 +30,24 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3">
+                Users
                 <ul>
                     <li ng-repeat="user in chat.usersList">
+                        {{user.email}} <button ng-click="chat.subscribeForIndividual(user)">+</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                Subscriptions
+                <ul>
+                    <li ng-repeat="user in chat.individualSubscriptions">
                         {{user.email}}
                     </li>
                 </ul>
             </div>
+
+
 
         </div>
     </div>

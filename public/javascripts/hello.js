@@ -3,9 +3,9 @@
 
 	angular.module("ChatApp").controller("ChatController", ChatController);
 
-	ChatController.$inject = ['$timeout', '$location', 'UsersListService'];
+	ChatController.$inject = ['$timeout', '$location', 'UsersListService', 'UserSubscriptionsService'];
 
-	function ChatController($timeout, $location, UsersListService) {
+	function ChatController($timeout, $location, UsersListService, UserSubscriptionsService) {
 
 		// binding model for the UI
 		var chat = this;
@@ -15,11 +15,13 @@
 		chat.username = "";
 		chat.receiver = "";
 		chat.usersList = [];
+		chat.individualSubscriptions = [];
 
 		chat.getHistoryUserUid = null;
 
 		// chat.register = register;
 		chat.getHistory = getHistory;
+		chat.subscribeForIndividual = subscribeForIndividual;
 
 		init();
 
@@ -30,15 +32,17 @@
 			// what to do when we receive message from the webserver
 			chat.ws.onmessage = onmessage;
 
-			// chat.username = $cookies.get('username') ? $cookies.get('username') : "";
-			// if (chat.username && chat.username != "") {
-			// 	chat.register();
-			// }
 			UsersListService.list().then(function (message) {
-				if(message != null){
+				if (message != null) {
 					chat.usersList = message.data;
 				}
-			})
+			});
+
+			UserSubscriptionsService.listIndividual().then(function (message) {
+				if (message != null) {
+					chat.individualSubscriptions = message.data;
+				}
+			});
 		}
 
 		// what happens when user enters message
@@ -59,15 +63,6 @@
 
 			chat.currentMessage = "";
 		};
-
-		// function register() {
-		// 	sendViaWs(JSON.stringify({
-		// 		uid: chat.username,
-		// 		messageType: "login"
-		// 	}));
-		//
-		// 	$cookies.put("username", chat.username);
-		// }
 
 
 		function onmessage(msg) {
@@ -114,18 +109,46 @@
 				}, interval);
 			}
 		}
+
+		function subscribeForIndividual(user) {
+			UserSubscriptionsService.subscribeToIndividual(user)
+				.then(function () {
+					UserSubscriptionsService.listIndividual().then(function (message) {
+						if (message != null) {
+							chat.individualSubscriptions = message.data;
+						}
+					});
+				});
+
+		}
 	}
 
 	angular.module("ChatApp").service("UsersListService", UsersListService);
 
 	UsersListService.$inject = ['$http'];
 
-	function UsersListService($http){
+	function UsersListService($http) {
 
 
-		this.list = function(){
+		this.list = function () {
 			return $http.get("/users/list");
 		}
+
+	}
+
+	angular.module("ChatApp").service("UserSubscriptionsService", UserSubscriptionsService);
+
+	UserSubscriptionsService.$inject = ['$http'];
+
+	function UserSubscriptionsService($http) {
+
+		this.listIndividual = function () {
+			return $http.get("/user/subscriptions/list");
+		};
+
+		this.subscribeToIndividual = function (user) {
+			return $http.post("/user/subscriptions/subscribe", user);
+		};
 
 	}
 

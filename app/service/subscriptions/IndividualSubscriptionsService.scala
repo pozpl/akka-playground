@@ -45,7 +45,7 @@ class IndividualSubscriptionsServiceImpl @Inject() (userSubscriptionsDao: UserSu
         foundSubscription.flatMap((subOpt:Option[UserIndividualSubscription]) => subOpt match {
             case Some(subscription) => Future.successful(subscription)
             case None => {
-                val userIndividualSubscription = new UserIndividualSubscription(None, user.userId.toString, userToSubscribe.userId.toString, 0)
+                val userIndividualSubscription = UserIndividualSubscription(None, user.userId.toString, userToSubscribe.userId.toString, 0)
                 userSubscriptionsDao.save(userIndividualSubscription)
             }
         })

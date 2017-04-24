@@ -3,7 +3,7 @@
 # --- !Ups
 
 create table if not exists user_individual_subscription(
-  `id` INT NOT NULL PRIMARY KEY,
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_id` varchar(100) NOT NULL,
   `subscribed_user_id` varchar(100) NOT NULL,
   `position` INT(10) NOT NULL DEFAULT 0,
