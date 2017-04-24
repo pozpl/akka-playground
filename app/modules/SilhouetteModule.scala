@@ -106,7 +106,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
                                          facebookProvider: FacebookProvider,
                                          googleProvider: GoogleProvider,
                                          vkProvider: VKProvider,
-                                         clefProvider: ClefProvider,
                                          twitterProvider: TwitterProvider,
                                          xingProvider: XingProvider,
                                          yahooProvider: YahooProvider): SocialProviderRegistry = {
@@ -117,8 +116,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
             twitterProvider,
             vkProvider,
             xingProvider,
-            yahooProvider,
-            clefProvider
+            yahooProvider
         ))
     }
 
@@ -294,19 +292,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule with AkkaGuiceSup
                              configuration: Configuration): VKProvider = {
 
         new VKProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.vk"))
-    }
-
-    /**
-      * Provides the Clef provider.
-      *
-      * @param httpLayer     The HTTP layer implementation.
-      * @param configuration The Play configuration.
-      * @return The Clef provider.
-      */
-    @Provides
-    def provideClefProvider(httpLayer: HTTPLayer, configuration: Configuration): ClefProvider = {
-
-        new ClefProvider(httpLayer, new DummyStateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.clef"))
     }
 
     /**

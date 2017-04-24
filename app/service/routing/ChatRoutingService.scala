@@ -25,6 +25,7 @@ trait ChatRoutingService {
                                 .map(if(_){
                                     chatEventBus.publish(msg)
                                 })
+                            case _ => None    
                         }
                     })
                 }
@@ -52,7 +53,7 @@ trait ChatRoutingService {
     private def getChatHistory(initiatorUserUid: String, pearUid: String): Future[List[OutboundTextMessage]] = {
         conversationsService.getTextMessagesForPrivateChat(initiatorUserUid, pearUid).map((list: List[ReceivedTextMessage]) => {
             list.map(receivedMessage => {
-                OutboundTextMessage(receivedMessage.userUid, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
+                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
             })
         })
 
