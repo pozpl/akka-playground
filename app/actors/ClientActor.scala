@@ -25,8 +25,8 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
         evt match {
 //            case login: Login => chatService ! login
             case textMessage: TextMessage => {
-                val timeStump:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
-                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.userId.toString, timeStump))
+                val timeStamp:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
+                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user.userId.toString, timeStamp))
             }
             case getChatHistory: GetChatHistoryRequest => {
                 log.info("Get chat history request " + getChatHistory.toString)
