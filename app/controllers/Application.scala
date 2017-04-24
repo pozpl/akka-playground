@@ -6,7 +6,6 @@ import actors.ClientActor
 import akka.actor._
 import akka.stream.Materializer
 import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
-import models.db.User
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.JsValue
 import play.api.libs.streams.ActorFlow
@@ -14,7 +13,8 @@ import play.api.mvc._
 import service.conversations.ConversationsServiceImplInMemory
 import service.routing.ChatEventBus
 import service.session.ChatService
-import service.user.DefaultEnv
+import service.subscriptions.IndividualSubscriptionsService
+import service.user.{DefaultEnv, UserService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -24,7 +24,9 @@ class Application @Inject()(implicit val actorSystem: ActorSystem, eventBus: Cha
                             implicit val ec: ExecutionContext,
                             val messagesApi: MessagesApi,
                             val webJarAssets: WebJarAssets,
-                            val silhouette: Silhouette[DefaultEnv]
+                            val silhouette: Silhouette[DefaultEnv] ,
+                            val userService: UserService,
+                            val individualSubscriptionsService: IndividualSubscriptionsService
                         ) extends Controller with I18nSupport {
 
     def index = silhouette.UserAwareAction.async { implicit request =>
@@ -36,7 +38,7 @@ class Application @Inject()(implicit val actorSystem: ActorSystem, eventBus: Cha
 
 
     val conversationsService = new ConversationsServiceImplInMemory;
-    val chatService = actorSystem.actorOf(Props(new ChatService(eventBus, conversationsService)))
+    val chatService = actorSystem.actorOf(Props(new ChatService(eventBus, conversationsService, userService, individualSubscriptionsService)))
 
 
     def socket = WebSocket.acceptOrResult[JsValue, JsValue] { implicit request =>

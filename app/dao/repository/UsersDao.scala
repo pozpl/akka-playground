@@ -43,6 +43,13 @@ trait UserDao {
     def find(userID: UUID): Future[Option[User]]
 
     /**
+      * Find user by string uid
+      * @param userUuid
+      * @return
+      */
+    def find(userUuid: String): Future[Option[User]]
+
+    /**
       * Saves a user.
       *
       * @param user The user to save.
@@ -164,6 +171,16 @@ class UserDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
         db.run(actions).map(_ => user)
     }
 
+    /**
+      * Find user by string uid
+      *
+      * @param userUid
+      * @return
+      */
+    override def find(userUid: String): Future[Option[User]] = {
+         val userUuid = UUID.fromString(userUid)
+        find(userUuid)
+    }
 }
 
 

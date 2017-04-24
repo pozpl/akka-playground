@@ -72,4 +72,14 @@ class UserServiceImpl @Inject() (userDao: UserDao) extends UserService {
                 avatarUrl = profile.avatarURL
             ))
     }
+
+    /**
+      * Find user by uid
+      *
+      * @param uid
+      * @return
+      */
+    override def find(uid: String): Future[Option[User]] = {
+        userDao.find(uid)
+    }
 }

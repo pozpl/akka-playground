@@ -34,4 +34,11 @@ trait UserService extends IdentityService[User] {
       * @return
       */
     def list():Future[Seq[User]]
+
+    /**
+      * Find user by uid
+      * @param uid
+      * @return
+      */
+    def find(uid:String):Future[Option[User]]
 }

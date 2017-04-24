@@ -28,6 +28,14 @@ trait IndividualSubscriptionsService {
       */
     def getIndividualSubscriptions(user: User): Future[Seq[User]]
 
+    /**
+      * Is user subscribed to another user
+      * @param user
+      * @param userToSubscribe
+      * @return
+      */
+    def isSubscribed(user: User, userToSubscribe:User):Future[Boolean]
+
 }
 
 
@@ -59,5 +67,21 @@ class IndividualSubscriptionsServiceImpl @Inject() (userSubscriptionsDao: UserSu
       */
     override def getIndividualSubscriptions(user: User): Future[Seq[User]] = {
         userSubscriptionsDao.find(user)
+    }
+
+    /**
+      * Is user subscribed to another user
+      *
+      * @param user
+      * @param userToSubscribe
+      * @return
+      */
+    override def isSubscribed(user: User, userToSubscribe: User): Future[Boolean] = {
+        userSubscriptionsDao.find(user, userToSubscribe).map(subscriptionOpt => {
+            subscriptionOpt match {
+                case Some(_) => true
+                case None => false
+            }
+        })
     }
 }

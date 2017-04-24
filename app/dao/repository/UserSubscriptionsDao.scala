@@ -35,6 +35,7 @@ trait UserSubscriptionsDao {
       * @return
       */
     def save(userSubscription: UserIndividualSubscription): Future[UserIndividualSubscription]
+
 }
 
 class UserSubscriptionsDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)

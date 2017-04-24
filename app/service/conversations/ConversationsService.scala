@@ -27,10 +27,10 @@ class ConversationsServiceImplInMemory() extends TConversationsService{
 
     override def getTextMessagesForPrivateChat(pearOne: String, pearTwo: String): Future[List[ReceivedTextMessage]] = {
         val oneList = ConversationsServiceImplInMemory.conversation.filter((message:ReceivedTextMessage) => {
-            message.userUid == pearOne
+            message.sender.userId.toString == pearOne
         })
         val twoList = ConversationsServiceImplInMemory.conversation.filter((message:ReceivedTextMessage) => {
-            message.userUid == pearTwo
+            message.sender.userId.toString == pearTwo
         })
 
         val fullList = (oneList ::: twoList).sortWith((x, y) => x.timeStump < y.timeStump)

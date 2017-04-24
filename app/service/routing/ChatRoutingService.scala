@@ -1,6 +1,7 @@
 package service.routing
 
 import actors.ChatServer
+import models.db.User
 import service.protocol.{ChatHistoryRequest, ChatHistoryResponse, OutboundTextMessage, ReceivedTextMessage}
 
 import scala.concurrent.Future
@@ -16,7 +17,22 @@ trait ChatRoutingService {
     protected def chatManagement: Receive = {
         case msg: ReceivedTextMessage => {
             conversationsService.registerTextMessage(msg)
-            chatEventBus.publish(msg)
+            if(msg.textMessage.to.segment == ChatSegments.Individual){
+                msg.textMessage.to.target match {
+                    case Some(userUid) => userService.find(userUid).map((userOpt: Option[User]) => {
+                        userOpt match {
+                            case Some(messageReceiver) => individualSubscriptionsService.isSubscribed(messageReceiver, msg.sender)
+                                .map(if(_){
+                                    chatEventBus.publish(msg)
+                                })
+                        }
+                    })
+                }
+
+            }else{
+                chatEventBus.publish(msg)
+            }
+
         }
         case getHistory: ChatHistoryRequest => {
             val senderRef = sender()

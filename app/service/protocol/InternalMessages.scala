@@ -10,7 +10,7 @@ abstract class InternalMessages
 
 case class UserActivated(user: User) extends InternalMessages
 
-case class ReceivedTextMessage(textMessage: TextMessage, userUid: String, timeStump: Long) extends InternalMessages
+case class ReceivedTextMessage(textMessage: TextMessage, sender: User, timeStump: Long) extends InternalMessages
 
 case class ChatHistoryRequest(initiatorUserUid: String, chatHistoryWithChatCoordinate: ChatCoordinate) extends InternalMessages
 case class ChatHistoryResponse(chatCoordinate: ChatCoordinate ,messages: List[OutboundTextMessage]) extends InternalMessages
