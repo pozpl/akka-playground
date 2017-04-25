@@ -5,15 +5,9 @@
     <div ng-app="ChatApp">
         <div ng-controller="ChatController as chat">
             <div class="col-md-7">
+                <div>{{chat.receiverUser.email}}</div>
+
                 <form>
-                    <input type="text" placeholder="Enter name..."
-                    ng-model="chat.username">
-                    <input type="submit" value="Send"
-                    ng-click="chat.register()">
-
-                    <input type="text" placeholder="To..."
-                    ng-model="chat.receiver">
-
                     <input type="text" placeholder="Enter message..."
                     ng-model="chat.currentMessage">
                     <input type="submit" value="Send"
@@ -42,7 +36,7 @@
                 Subscriptions
                 <ul>
                     <li ng-repeat="user in chat.individualSubscriptions">
-                        {{user.email}}
+                        <a ng-href="" ng-click="chat.selectDialog(user)">{{user.email}}</a><button ng-click="chat.unsubscribeFromUser(user)">-</button>
                     </li>
                 </ul>
             </div>

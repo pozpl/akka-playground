@@ -14,6 +14,7 @@
 		chat.currentMessage = "";
 		chat.username = "";
 		chat.receiver = "";
+		chat.receiverUser = null;
 		chat.usersList = [];
 		chat.individualSubscriptions = [];
 
@@ -22,6 +23,8 @@
 		// chat.register = register;
 		chat.getHistory = getHistory;
 		chat.subscribeForIndividual = subscribeForIndividual;
+		chat.unsubscribeFromUser = unsubscribeFromUser;
+		chat.selectDialog = selectDialog;
 
 		init();
 
@@ -119,7 +122,24 @@
 						}
 					});
 				});
+		}
 
+		function unsubscribeFromUser(user) {
+			UserSubscriptionsService.unsubscribe(user)
+				.then(function () {
+					UserSubscriptionsService.listIndividual().then(function (message) {
+						if (message != null) {
+							chat.individualSubscriptions = message.data;
+						}
+					});
+				});
+		}
+
+		function selectDialog(user){
+			if(user != null){
+				chat.receiver = user.userId
+				chat.receiverUser = user;
+			}
 		}
 	}
 
@@ -149,6 +169,16 @@
 		this.subscribeToIndividual = function (user) {
 			return $http.post("/user/subscriptions/subscribe", user);
 		};
+
+		this.unsubscribe = function (user) {
+			return $http({
+				method: 'DELETE',
+				url: "/user/subscriptions/unsubscribe",
+				params: {
+					user: user.userId
+				}
+			});
+		}
 
 	}
 
