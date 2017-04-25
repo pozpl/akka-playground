@@ -36,6 +36,8 @@ trait UserSubscriptionsDao {
       */
     def save(userSubscription: UserIndividualSubscription): Future[UserIndividualSubscription]
 
+    def delete(subscribedUser:User, subscriptionUser: User):Future[Int]
+
 }
 
 class UserSubscriptionsDaoImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
@@ -98,5 +100,20 @@ class UserSubscriptionsDaoImpl @Inject()(protected val dbConfigProvider: Databas
             if dbSubscription.userUid  === user.userId.toString  && dbSubscription.subscribedUserUid === userSubscription.userId.toString
         }yield dbSubscription
         db.run(query.result.headOption)
+    }
+
+    /**
+      * Delete subscription
+      * @param subscribedUser
+      * @param subscriptionUser
+      * @return
+      */
+    override def delete(subscribedUser: User, subscriptionUser: User): Future[Int] = {
+        val subscribedUserUid: String = subscribedUser.userId.toString
+        val subscribedToUid: String = subscriptionUser.userId.toString
+        val query = userSubscriptions.filter(subscription =>{
+            subscription.userUid === subscribedUserUid && subscription.subscribedUserUid  === subscribedToUid})
+
+        db.run(query.delete)
     }
 }

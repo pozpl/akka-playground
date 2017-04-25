@@ -7,6 +7,7 @@ import models.db.{User, UserIndividualSubscription}
 
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import service.user.UserService
 
 /**
   * Created by pozpl on 21.04.17.
@@ -36,10 +37,21 @@ trait IndividualSubscriptionsService {
       */
     def isSubscribed(user: User, userToSubscribe:User):Future[Boolean]
 
+    /**
+      * Delete subscriptions of user to another user
+      * @param user
+      * @param userToSubscribe
+      * @return
+      */
+    def deleteSubscription(user:User, userToSubscribe:User):Future[Boolean]
+
+    def deleteSubscription(subscriptionOwner:User, subscribedToUid: String):Future[Boolean]
+
 }
 
 
-class IndividualSubscriptionsServiceImpl @Inject() (userSubscriptionsDao: UserSubscriptionsDao) extends IndividualSubscriptionsService{
+class IndividualSubscriptionsServiceImpl @Inject() (   usersService: UserService,
+                                                       userSubscriptionsDao: UserSubscriptionsDao) extends IndividualSubscriptionsService{
 
     /**
       * Subscribe one user to another
@@ -81,6 +93,26 @@ class IndividualSubscriptionsServiceImpl @Inject() (userSubscriptionsDao: UserSu
             subscriptionOpt match {
                 case Some(_) => true
                 case None => false
+            }
+        })
+    }
+
+    /**
+      * Delete subscriptions of user to another user
+      *
+      * @param user
+      * @param userToSubscribe
+      * @return
+      */
+    override def deleteSubscription(user: User, userToSubscribe: User): Future[Boolean] = {
+        userSubscriptionsDao.delete(user, userToSubscribe).map(_ > 0)
+    }
+
+    override def deleteSubscription(subscriptionOwner: User, subscribedToUid: String): Future[Boolean] = {
+        usersService.find(subscribedToUid).flatMap((userOpt:Option[User]) =>{
+            userOpt match {
+                case  Some(user) => deleteSubscription(subscriptionOwner, user)
+                case _ => Future.successful(false)
             }
         })
     }

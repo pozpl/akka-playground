@@ -9,6 +9,7 @@ GET         /socket                          controllers.Application.socket
 GET         /users/list                      controllers.UsersListController.list
 GET         /user/subscriptions/list         controllers.UserSubscriptionsController.list
 POST        /user/subscriptions/subscribe    controllers.UserSubscriptionsController.subscribe
+DELETE      /user/subscriptions/unsubscribe  controllers.UserSubscriptionsController.unsubscribe(user:String)
 
 GET         /                                controllers.ApplicationController.index()
 GET         /signIn                          controllers.ApplicationController.signIn()

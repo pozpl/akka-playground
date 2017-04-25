@@ -51,6 +51,8 @@ class UserSubscriptionsController @Inject()(
         }
     }
 
-
+    def unsubscribe(userUidToUnsubscribe:String) = silhouette.SecuredAction.async{ implicit request =>
+         individualSubscriptionsService.deleteSubscription(request.identity, userUidToUnsubscribe).map(isOk => Ok(Json.toJson(isOk)))
+    }
 
 }
