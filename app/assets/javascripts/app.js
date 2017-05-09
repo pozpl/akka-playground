@@ -18,7 +18,8 @@ define([
 	var app = angular.module('app', [
 		'ngSanitize' ,
 		'ngRoute',
-		'app.chat'
+		'app.chat',
+		'sidebar'
 	]);
 
 

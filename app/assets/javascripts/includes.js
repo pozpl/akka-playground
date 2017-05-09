@@ -1,6 +1,7 @@
 define([
 	'config',
-	'chat/chatController'
+	'chat/chatController',
+	'chat/sidebar/sidebarModule'
 	
 ], function () {
 	'use strict';
