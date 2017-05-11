@@ -18,7 +18,8 @@
 			'angular-ui-router': ['../lib/angular-ui-router/angular-ui-router'],
 			'angular-sanitize': ['../lib/angular-sanitize/angular-sanitize'],
 			'bootstrap': ['../lib/bootstrap/js/bootstrap'],
-			'domReady': ['../plugins/requirejs-domready/domReady']
+			'domReady': ['../plugins/requirejs-domready/domReady'],
+			'moment' : ['../lib/momentjs/moment']
 
 		},
 		shim: {

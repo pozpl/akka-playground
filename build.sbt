@@ -38,6 +38,7 @@ libraryDependencies ++= Seq(
     "org.webjars" % "angular-sanitize" % "1.3.11",
     "org.webjars" % "html5shiv" % "3.7.0",
     "org.webjars" % "respond" % "1.4.2",
+    "org.webjars" % "momentjs" % "2.18.1",
     "com.adrianhurt" %% "play-bootstrap" % "1.1.1-P25-B3-SNAPSHOT",
     "org.webjars.bower" % "compass-mixins" % "0.12.7"
 )

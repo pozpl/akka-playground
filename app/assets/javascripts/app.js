@@ -19,7 +19,12 @@ define([
 		'ngSanitize' ,
 		'ngRoute',
 		'app.chat',
-		'sidebar'
+		'sidebar',
+		'ParticipantsList',
+		'WebSocket',
+		'MessageList',
+		'MessageForm',
+		'Avatar'
 	]);
 
 
