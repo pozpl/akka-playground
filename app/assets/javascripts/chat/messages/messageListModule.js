@@ -1,5 +1,5 @@
 define(['angular', 'angular-route', 'moment',
-'chat/messages/messagesListController'], function (angular, angularRote, moment, MessageListController) {
+'chat/messages/messagesListController', 'underscore'], function (angular, angularRote, moment, MessageListController, _) {
 
 	'use strict';
 

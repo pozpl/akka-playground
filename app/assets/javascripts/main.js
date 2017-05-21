@@ -19,7 +19,8 @@
 			'angular-sanitize': ['../lib/angular-sanitize/angular-sanitize'],
 			'bootstrap': ['../lib/bootstrap/js/bootstrap'],
 			'domReady': ['../plugins/requirejs-domready/domReady'],
-			'moment' : ['../lib/momentjs/moment']
+			'moment' : ['../lib/momentjs/moment'],
+			'underscore' : ['../lib/underscorejs/underscore']
 
 		},
 		shim: {
