@@ -48,7 +48,7 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
         case receivedMessage:ReceivedTextMessage => {
             log.info("Trying to send outbound message " + receivedMessage.textMessage.message)
             signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue(
-                OutboundTextMessage(receivedMessage.sender.email.getOrElse(""), receivedMessage.textMessage.to, receivedMessage.textMessage.message)
+                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
             ))
         }
         case chatHistoryResponse: ChatHistoryResponse => {
