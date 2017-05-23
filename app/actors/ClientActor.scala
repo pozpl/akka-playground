@@ -26,7 +26,12 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
 //            case login: Login => chatService ! login
             case textMessage: TextMessage => {
                 val timeStamp:Long = Instant.now().atOffset(ZoneOffset.UTC).toEpochSecond
-                signedInUser.map((user:User) => chatService ! ReceivedTextMessage(textMessage, user, timeStamp))
+                signedInUser.map((user:User) => {
+                    chatService ! ReceivedTextMessage(textMessage, user, timeStamp)
+                    out ! ClientMessages.clientMessage2JsValue(
+                        OutboundTextMessage(user.userId.toString, textMessage.to,
+                            textMessage.message, timeStamp))
+                })
             }
             case getChatHistory: GetChatHistoryRequest => {
                 log.info("Get chat history request " + getChatHistory.toString)
@@ -48,7 +53,8 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
         case receivedMessage:ReceivedTextMessage => {
             log.info("Trying to send outbound message " + receivedMessage.textMessage.message)
             signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue(
-                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to, receivedMessage.textMessage.message)
+                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to,
+                    receivedMessage.textMessage.message, receivedMessage.timeStump)
             ))
         }
         case chatHistoryResponse: ChatHistoryResponse => {

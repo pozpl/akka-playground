@@ -28,7 +28,7 @@ define([], function () {
 		}
 
 		function handleIncomingMessage(data) {
-			vm.messages.push({ message: data.message, user: data.from, created_at: data.created_at, type: "message" });
+			vm.messages.push({ message: data.message, user: data.from, created_at: data.createdAt, type: "message" });
 		}
 
 		function handleUserDisconnected(data) {

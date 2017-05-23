@@ -3,7 +3,7 @@
         <avatar user="messageContent.user" ng-if="messageContent.type == 'message'"></avatar>
         <div class="message-container">
             <div class="meta">
-                <span class="author" ng-if="messageContent.from">{{messageContent.from}}</span><span class="date">{{messageContent.created_at | relativeDate }}</span>
+                <span class="author" ng-if="messageContent.from">{{messageContent.from}}</span><span class="date">{{messageContent.createdAt | relativeDate }}</span>
             </div>
             <div class="message" formatted-message="messageContent.message">
             </div>

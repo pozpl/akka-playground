@@ -29,7 +29,7 @@ define(['angular'], function(angular){
 				var unwatch = $scope.$watch("user", function(user) {
 					console.log("user", user);
 
-					if (user) {
+					if (user != null && typeof (user.name) != 'undefined' ) {
 						$scope.initials = (user.name[0] || "A");
 
 						if (!colorMapping[user.id]) colorMapping[user.id] = randomColor();
