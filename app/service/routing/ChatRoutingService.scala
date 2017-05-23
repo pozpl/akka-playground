@@ -28,6 +28,7 @@ trait ChatRoutingService {
                             case _ => None    
                         }
                     })
+                    case _ => None
                 }
 
             }else{

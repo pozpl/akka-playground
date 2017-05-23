@@ -1,5 +1,7 @@
 <ul class="participants-list">
-    <li ng-repeat="participant in ctrl.participants">
-        <a href="#">{{participant.name}}</a>
+    <li ng-repeat="participant in ctrl.participants"
+        ng-class="ctrl.recipient == participant ? 'active':'' ">
+        <a href=""
+           ng-click="ctrl.selectDialog(participant)">{{participant.fullName}}</a>
     </li>
 </ul>

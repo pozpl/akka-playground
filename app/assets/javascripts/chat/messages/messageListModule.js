@@ -73,15 +73,19 @@ define(['angular', 'angular-route', 'moment',
 				"formattedMessage" : "="
 			},
 			link: function($scope, element, attrs) {
-				// var unwatch = $scope.$watch("formattedMessage", function(str) {
-				// 	if (str) {
-				// 		str = FormatMessageService.breakNewLine(str);
-				// 		str = FormatMessageService.autoLink(str);
-				// 		element.html(str);
-				//
-				// 		unwatch();
-				// 	}
-				// });
+				var unwatch = $scope.$watch("formattedMessage", function(str) {
+					if (str) {
+						str = breakNewLine(str);
+						
+						element.html(str);
+
+						unwatch();
+					}
+				});
+
+				function breakNewLine(str) {
+					return str.replace(/(\r|\n)/g, '<br>');
+				}
 			}
 		};
 	}

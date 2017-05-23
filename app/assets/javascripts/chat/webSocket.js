@@ -1,37 +1,69 @@
 define(['angular'], function (angular) {
 
 	var module = angular.module('WebSocket', [])
-		.factory('WebSocket', WebSocket);
+		.service('WebSocketService', WebSocketService);
 
-	WebSocket.$inject = ['$rootScope'];
+	WebSocketService.$inject = ['$rootScope', '$location', '$timeout'];
 
-	function WebSocket($rootScope) {
+	function WebSocketService($rootScope, $location, $timeout) {
+
+		var vm = {};
+
+		vm.socket = null;
+		vm.callbacks = {};
 
 		init();
 
 		function init() {
-			// var host = window.location.origin;
-			// console.log("WEBSOCKET connecting to", host);
-			//
-			// this.socket = new WebSocket("ws://" + host + ":9000/socket");
-			//
-			// this.socket.on('connect', function () {
-			//
-			// });
+			var webSocketAddress = "ws://" + $location.host() + ":9000/socket"
+
+			console.log("WEBSOCKET connecting to", webSocketAddress);
+
+			vm.socket = new WebSocket(webSocketAddress);
+
+			vm.socket.onmessage = onmessage;
 
 		}
+
+		this.send = sendViaWs;
+		this.on = on;
 
 		function on(key, callback) {
-			// this.socket.on(key, function (data) {
-			// 	console.log("on", key, data)
-			// 	$rootScope.$apply(function () {
-			// 		callback(data)
-			// 	});
-			// });
+
+			vm.callbacks[key] = callback;
+
 		}
 
-		return {
-			on: on
+		function sendViaWs(message, callback) {
+			waitForConnection(function () {
+				vm.socket.send(message);
+				if (typeof callback !== 'undefined') {
+					callback();
+				}
+			}, 1000);
+		}
+
+		function waitForConnection(callback, interval) {
+			if (vm.socket.readyState === 1) {
+				callback();
+			} else {
+				$timeout(function () {
+					waitForConnection(callback, interval);
+				}, interval);
+			}
+		}
+
+		function onmessage(msg) {
+			$timeout(function () {
+				if (msg && msg.data) {
+					var parsedData = JSON.parse(msg.data);
+
+					if(vm.callbacks[parsedData.messageType] != null){
+						vm.callbacks[parsedData.messageType](parsedData)
+					}
+				}
+
+			});
 		}
 	}
 

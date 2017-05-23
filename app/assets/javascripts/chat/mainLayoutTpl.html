@@ -1,10 +1,10 @@
-<sidebar></sidebar>
+<sidebar recipient="ctrl.recipient"></sidebar>
 
 <div class="main-content">
 
     <div class="main-header">
         <div class="left">
-            <h2># general</h2>
+            <h2 ng-if="ctrl.recipient != null">#{{ctrl.recipient.fullName}}</h2>
         </div>
         <div class="right">
             <input class="search" type="search" placeholder="Search...">
@@ -12,5 +12,5 @@
     </div>
 
     <message-list></message-list>
-    <message-form></message-form>
+    <message-form ng-if="ctrl.recipient != null" recipient="ctrl.recipient"></message-form>
 </div>

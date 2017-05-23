@@ -3,20 +3,31 @@ define(['angular', 'angular-route'], function (angular) {
 	'use strict';
 
 	var module = angular.module('ParticipantsList', [])
-		.directive('participantsList', participantsListDirective);
+		.directive('participantsList', participantsListDirective)
+		.service("UserSubscriptionsService", UserSubscriptionsService);
 
 
-	ParticipantsListController.$inject = [];
+	ParticipantsListController.$inject = ['WebSocketService', 'UserSubscriptionsService'];
 
-	function ParticipantsListController(WebSocket) {
+	function ParticipantsListController(WebSocketService, UserSubscriptionsService) {
 
 		var vm = this;
+
+		vm.recipient = null;
+
+		vm.selectDialog = selectDialog;
 
 		init();
 
 		function init() {
 			vm.participants = [];
-			vm.WebSocket = WebSocket;
+			vm.WebSocket = WebSocketService;
+
+			UserSubscriptionsService.listIndividual().then(function (message) {
+				if (message != null) {
+					vm.participants = message.data;
+				}
+			});
 
 			register();
 		}
@@ -26,7 +37,11 @@ define(['angular', 'angular-route'], function (angular) {
 
 		}
 
-		
+		function selectDialog(user){
+			if(user != null){
+				vm.recipient = user;
+			}
+		}
 
 	}
 
@@ -38,11 +53,38 @@ define(['angular', 'angular-route'], function (angular) {
 			restrict: "E",
 			replace: true,
 			templateUrl: 'assets/javascripts/chat/participants/participantsListTpl.html',
-			scope: true,
+			scope: {
+				recipient: "="
+			},
 			bindToController: true,
 			controllerAs: "ctrl",
 			controller: ParticipantsListController
 		};
+	}
+
+
+	UserSubscriptionsService.$inject = ['$http'];
+
+	function UserSubscriptionsService($http) {
+
+		this.listIndividual = function () {
+			return $http.get("/user/subscriptions/list");
+		};
+
+		this.subscribeToIndividual = function (user) {
+			return $http.post("/user/subscriptions/subscribe", user);
+		};
+
+		this.unsubscribe = function (user) {
+			return $http({
+				method: 'DELETE',
+				url: "/user/subscriptions/unsubscribe",
+				params: {
+					user: user.userId
+				}
+			});
+		}
+
 	}
 
 	return module;

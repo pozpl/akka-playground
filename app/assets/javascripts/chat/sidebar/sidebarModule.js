@@ -26,7 +26,9 @@ define(['angular', 'angular-route'], function(angular) {
 		return {
 			restrict: "E",
 			replace: true,
-			scope: true,
+			scope: {
+				recipient: "="
+			},
 			templateUrl: 'assets/javascripts/chat/sidebar/sidebar.html',
 			bindToController: true,
 			controllerAs: "ctrl",

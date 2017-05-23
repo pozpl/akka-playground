@@ -7,7 +7,8 @@ define(['angular', 'angular-route'], function(angular) {
 	module.config(['$routeProvider', function ($routeProvider) {
 		$routeProvider.when('/', {
 			templateUrl: 'assets/javascripts/chat/mainLayoutTpl.html',
-			controller: 'MainController'
+			controller: 'MainController',
+			controllerAs: "ctrl"
 		});
 
 		$routeProvider.otherwise({
@@ -21,6 +22,9 @@ define(['angular', 'angular-route'], function(angular) {
 	MainController.$inject = [];
 
 	function MainController(){
+
+		var vm = this;
+		vm.recipient = null;
 
 	}
 

@@ -1,31 +1,34 @@
 define([], function () {
 
-	MessageListController.$inject = ["WebSocket"];
+	MessageListController.$inject = ["WebSocketService"];
 
-	function MessageListController(WebSocket) {
+	function MessageListController(WebSocketService) {
+
+		var vm = this;
 
 		constructor();
 		function constructor() {
-			this.messages = [];
+			vm.messages = [];
 
 			register();
 		}
 
 		function register() {
-			WebSocket.on('incoming_message', function(data){
+			WebSocketService.on('outbound_text_message', function(data){
 				handleIncomingMessage(data);
 			});
 
-			WebSocket.on('new_connection', function(data){
+			WebSocketService.on('new_connection', function(data){
 				handleNewConnection(data);
 			});
 
-			WebSocket.on('user_disconnected', function(data){
+			WebSocketService.on('user_disconnected', function(data){
 				handleUserDisconnected(data);
 			});
 		}
 
 		function handleIncomingMessage(data) {
+			vm.messages.push({ message: data.message, user: data.from, created_at: data.created_at, type: "message" });
 		}
 
 		function handleUserDisconnected(data) {

@@ -11,7 +11,9 @@ define(['angular'], function (angular) {
 		return {
 			restrict: "E",
 			replace: true,
-			scope: {},
+			scope: {
+				recipient: '='
+			},
 			templateUrl: 'assets/javascripts/chat/message_form/messageFormTpl.html',
 			bindToController: true,
 			controllerAs: "ctrl",
@@ -19,12 +21,27 @@ define(['angular'], function (angular) {
 		};
 	}
 
-	MessageFormController.$inject = ["$http"];
+	MessageFormController.$inject = ["$http", 'WebSocketService'];
 
-	function MessageFormController($http) {
+	function MessageFormController($http, WebSocketService) {
+		var vm = this;
+		vm.message = "";
 
 		this.sendMessage = function(message){
-
+			if(vm.recipient) {
+				WebSocketService.send(JSON.stringify({
+					to: {
+						segment: "individual",
+						target: vm.recipient.userId
+					},
+					message: message,
+					messageType: "text_message"
+				}),
+				function(){
+					vm.message = "";
+				});
+			}
+			
 		}
 
 	}
