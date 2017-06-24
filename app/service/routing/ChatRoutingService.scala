@@ -54,7 +54,9 @@ trait ChatRoutingService {
     private def getChatHistory(initiatorUserUid: String, pearUid: String): Future[List[OutboundTextMessage]] = {
         conversationsService.getTextMessagesForPrivateChat(initiatorUserUid, pearUid).map((list: List[ReceivedTextMessage]) => {
             list.map(receivedMessage => {
-                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to,
+                OutboundTextMessage(receivedMessage.sender.userId.toString,
+                    receivedMessage.sender.fullName.getOrElse(""),
+                    receivedMessage.textMessage.to,
                     receivedMessage.textMessage.message, receivedMessage.timeStump)
             })
         })

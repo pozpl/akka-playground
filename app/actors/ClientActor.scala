@@ -29,7 +29,9 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
                 signedInUser.map((user:User) => {
                     chatService ! ReceivedTextMessage(textMessage, user, timeStamp)
                     out ! ClientMessages.clientMessage2JsValue(
-                        OutboundTextMessage(user.userId.toString, textMessage.to,
+                        OutboundTextMessage(user.userId.toString,
+                            user.fullName.getOrElse(""),
+                            textMessage.to,
                             textMessage.message, timeStamp))
                 })
             }
@@ -53,7 +55,9 @@ class ClientActor (user:User, out: ActorRef, chatService: ActorRef) extends Acto
         case receivedMessage:ReceivedTextMessage => {
             log.info("Trying to send outbound message " + receivedMessage.textMessage.message)
             signedInUser.map((user:User) => out ! ClientMessages.clientMessage2JsValue(
-                OutboundTextMessage(receivedMessage.sender.userId.toString, receivedMessage.textMessage.to,
+                OutboundTextMessage(receivedMessage.sender.userId.toString,
+                    receivedMessage.sender.fullName.getOrElse(""),
+                    receivedMessage.textMessage.to,
                     receivedMessage.textMessage.message, receivedMessage.timeStump)
             ))
         }

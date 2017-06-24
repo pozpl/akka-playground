@@ -26,7 +26,8 @@ object ClientMessages {
         ) (TextMessage.apply, unlift(TextMessage.unapply))
 
     implicit val outboundMessageFormatter: Format[OutboundTextMessage] = (
-        (__ \ "from").format[String] ~
+        (__ \ "fromUid").format[String] ~
+        (__ \ "fromName").format[String] ~
             (__ \ "chatCoordinate").format[ChatCoordinate] ~
             (__ \ "message").format[String] and
             (__ \ "createdAt").format[Long] and
@@ -72,7 +73,7 @@ case class UnknownMessage(messageType: String = UnknownMessage.MSG_TYPE) extends
 
 case class TextMessage(to: ChatCoordinate, message: String, messageType: String = TextMessage.MSG_TYPE) extends ClientMessages
 
-case class OutboundTextMessage(from: String, chatCoordinate: ChatCoordinate, message: String, createdAt: Long,
+case class OutboundTextMessage(fromUid: String, formName:String, chatCoordinate: ChatCoordinate, message: String, createdAt: Long,
                                messageType: String = OutboundTextMessage.MSG_TYPE) extends ClientMessages
 
 case class GetChatHistoryRequest(chatCoordinate: ChatCoordinate, messageType: String = GetChatHistoryRequest.MSG_TYPE) extends ClientMessages
